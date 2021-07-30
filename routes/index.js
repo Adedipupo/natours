@@ -6,4 +6,4 @@ const router = express.Router();
 
 router.use('/tour', tourRoutes)
 
-module.exports = { router };
+module.exports =  router ;

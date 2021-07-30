@@ -1,9 +1,10 @@
 const express = require('express');
-const indexRouter = require('./routes/index.js');
+const morgan = require('morgan');
+const indexRouter = require('./routes/index');
 
 
 const app = express();
-
+app.use(morgan('dev'));
 app.use(express.json())
 
 const port = process.env.PORT || 8080;
