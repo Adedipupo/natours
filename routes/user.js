@@ -1,8 +1,8 @@
-const { getAllTours } = require("../controllers/tour");
+const { getAllUsers } = require("../controllers/user");
 const express = require('express');
 
 const router = express.Router();
 
-router.get('/allTours', getAllTours)
+router.get('/allUsers', getAllUsers)
 
 module.exports =router;
