@@ -1,5 +1,5 @@
 const express = require('express');
-
+const fs = require('fs');
 
 const app = express();
 
@@ -8,8 +8,10 @@ app.use(express.json())
 const port = process.env.PORT || 8080;
 
 
-app.get('/', (req,res)=>{
-    return res.send('Hello World!')
+const tours = fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`);
+
+app.get('/api/v1/tours', (req,res)=>{
+    return res.status(200).json({msg: 'Success', data: tours})
 })
 
 app.listen(port, ()=>{
