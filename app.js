@@ -1,11 +1,9 @@
 const express = require('express');
 const morgan = require('morgan');
-const dotenv = require('dotenv');
-const indexRouter = require('./routes/index');
-const { connectDB } = require('./config/db');
 
-dotenv.config();
-connectDB();
+const indexRouter = require('./routes/index');
+
+
 const app = express();
 app.use(morgan('dev'));
 app.use(express.json())
