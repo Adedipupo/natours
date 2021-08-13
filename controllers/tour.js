@@ -25,6 +25,21 @@ exports.getAllTours = async(req,res)=>{
     }
 }
 
+exports.getOneTour = async(req,res)=>{
+    try {
+        const {id} = req.params;
+        const tour = await TourModel.findById(id);
+
+
+        if(tour){
+            return res.status(200).json({message: 'Success',data: tour})
+        }
+
+    } catch (error) {
+        
+    }
+}
+
 exports.deleteTours = async(req,res)=>{
     try {
         const {id} = req.params;
