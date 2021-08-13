@@ -10,7 +10,7 @@ const tourSchema = new mongoose.Schema({
         type: Number,
         default: 4.5
     },
-    price: {
+    price: { 
         type: Number,
         required: [true,'A tour must have a model']
     }

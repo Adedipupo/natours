@@ -1,15 +1,18 @@
 const express = require('express');
 const morgan = require('morgan');
-
+const dotenv = require('dotenv');
 const indexRouter = require('./routes/index');
 
+dotenv.config();
 
 const app = express();
-app.use(morgan('dev'));
 app.use(express.json())
 
+if(process.env.NODE_ENV === 'development'){
+  app.use(morgan('dev'));
+}
 
-app.use((req,res,next) => {
+app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();
 })
