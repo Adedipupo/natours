@@ -12,6 +12,11 @@ app.use(express.json())
 
 const port = process.env.PORT || 8080;
 
+app.use((req,res,next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+})
+
 app.use('/api/v1', indexRouter);
 
 app.get('/', (_req, res) => {
