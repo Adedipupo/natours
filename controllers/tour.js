@@ -11,7 +11,7 @@ exports.createTour = async(req,res)=>{
         return res.status(201).json({message: 'Success', data: tour})
     }        
     } catch (error) {
-     return res.status(404).json({message: error.message})   
+     return res.status(400).json({message: error.message})   
     }
 
 }
@@ -21,7 +21,19 @@ exports.getAllTours = async(req,res)=>{
         const tours = await TourModel.find();
         return res.status(200).json({msg: 'Success',results: tours.length, data: tours})
     } catch (error) {
-        return res.status(404).json({message: error.message})   
+        return res.status(400).json({message: error.message})   
     }
 }
 
+exports.deleteTours = async(req,res)=>{
+    try {
+        const {id} = req.params;
+        const tour = await TourModel.findByIdAndRemove(id);
+
+        if(tour){
+            return res.status(200).json({message: 'Deleted Successfully !!!'})
+        }
+    } catch (error) {
+        
+    }
+}
