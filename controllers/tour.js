@@ -4,6 +4,9 @@ const fs = require('fs');
 
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
 
+exports.createTour = (req,res)=>{
+    const {name,rating,price} = req.body;
+}
 
 exports.getAllTours = (req,res)=>{
     return res.status(200).json({msg: 'Success',results: tours.length, data: tours})
