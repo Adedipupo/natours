@@ -5,17 +5,22 @@ const Tour = require('./../../models/tourModel');
 const Review = require('./../../models/reviewModel');
 const User = require('./../../models/userModel');
 
-dotenv.config({ path: './config.env' });
+dotenv.config();
 
-const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD);
-
-mongoose
-  .connect(DB, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-  })
-  .then(() => console.log('DB connection successful!'));
+connectDB = async() => {
+  try {
+      const conn = await mongoose.connect(process.env.DATABASE_URL, {
+          useUnifiedTopology: true,
+          useNewUrlParser: true,
+          useFindAndModify: false,
+          useCreateIndex: true
+      })
+      console.log(`Connected to MongoDB Successfully`);
+  } catch (error) {
+      console.error(`Error: ${error.message}`)
+      process.exit(1)
+  }
+}
 
 // READ JSON FILE
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
