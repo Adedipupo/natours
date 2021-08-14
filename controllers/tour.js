@@ -46,7 +46,7 @@ exports.updateTour = async (req, res) => {
 
         const tour = await TourModel.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
 
-        return res.status(200).json({ message: 'Success', data: tour })
+        return res.status(203).json({ message: 'Success', data: tour })
 
     } catch (error) {
         return res.status(404).json({ message: error.message })
@@ -59,7 +59,7 @@ exports.deleteTours = async (req, res) => {
         const tour = await TourModel.findByIdAndRemove(id);
 
         if (tour) {
-            return res.status(200).json({ message: 'Deleted Successfully !!!' })
+            return res.status(204).json({ message: 'Deleted Successfully !!!' })
         }
     } catch (error) {
         return res.status(404).json({ message: error.message })
