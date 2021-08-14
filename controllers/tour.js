@@ -1,3 +1,4 @@
+const { query } = require('express');
 const express = require('express');
 const { TourModel } = require('../models/tourModel');
 
@@ -22,7 +23,9 @@ class APIFeatures{
 
 
       let queryStr = JSON.stringify(queryObj);
-      queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`)
+      queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+
+      this.query.find(JSON.parse(queryStr))
     }
 }
 
@@ -42,7 +45,30 @@ exports.createTour = async (req, res) => {
 
 exports.getAllTours = async (req, res) => {
     try {
-        const tours = await TourModel.find();
+        if(req.query.sort){
+            const sortBy = req.query.sort.split(',').join(' ')
+            query = query.sort(sortBy);
+        }else {
+            query = query.sort('-createdAt');
+        }
+
+        if(req.query.limit){
+            const fields = req.query.fields.split(',').join(' ')
+            query = query.select(fields);
+        }else {
+            query = query.select('-_v');
+        }
+
+        const page = req.query.page * 1 || 1;
+        const limit = req.query.limit * 1 || 100;
+        const skip = (page - 1) * limit;
+
+        query = query.skip(skip).limit(limit)
+
+
+
+        const features = new APIFeatures(Tour.find(),req.query).filter();
+        const tours = await features.query;
         return res.status(200).json({ msg: 'Success', results: tours.length, data: tours })
     } catch (error) {
         return res.status(404).json({ message: error.message })
