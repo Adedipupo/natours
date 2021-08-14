@@ -1,6 +1,7 @@
 const { query } = require('express');
 const express = require('express');
 const { TourModel } = require('../models/tourModel');
+const APIFeatures = require('../utils/apiFeatures');
 
 
 exports.alaisTopTours = async(req,res,next) => {
@@ -10,69 +11,17 @@ exports.alaisTopTours = async(req,res,next) => {
     next();
 }
 
-class APIFeatures{
-    constructor(query, queryString){
-        this.query = query;
-        this.queryString = queryString;
-    }
-    
-    filter(){
-        const queryObj = {...this.queryString}
-        const excludedFields = ['page','sort','limit','fields']
-        excludedFields.forEach((el)=> delete queryObj[el]);
-        
-        
-        let queryStr = JSON.stringify(queryObj);
-        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-        
-        this.query = this.query.find(JSON.parse(queryStr));
-        return this;
-    }
-
-    sort(){
-        if(this.queryString.sort){
-            const sortBy = this.query.sort.split(',').join(' ')
-            this.query = this.query.sort(sortBy);
-        }else {
-            this.query = this. query.sort('-createdAt');
-        }
-        return this;
-    }
-    limit(){
-        if(this.queryString.limit){
-            const fields = this.queryString.fields.split(',').join(' ')
-            this.query = this.query.select(fields);
-        }else {
-            this.query = this.query.select('-_v');
-        }
-        return this;
-    }
-    paginate(){
-        const page = this.queryString.page * 1 || 1;
-        const limit = this.queryString.limit * 1 || 100;
-        const skip = (page - 1) * limit;
-
-        this.query = this.query.skip(skip).limit(limit);
-
-        if(this.queryString.page){
-            const numTours = await TourModel.countDocuments();
-            if(skip >= numTours) throw new Errors('The page does not exist')
-        }
-        return this;
-    }
-
-}
 
 exports.getAllTours = async (req, res) => {
     try {
-        const features = new APIFeatures(Tour.find(),req.query).filter().sort().limit().paginate();
+        const features = new APIFeatures(TourModel.find(),req.query).filter().sort().limit().paginate();
         const tours = await features.query;
         return res.status(200).json({ msg: 'Success', results: tours.length, data: tours })
     } catch (error) {
         return res.status(404).json({ message: error.message })
     }
 }
-
+ 
 exports.createTour = async (req, res) => {
     try {
         const { name, rating, price } = req.body;
