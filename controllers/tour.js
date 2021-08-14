@@ -2,6 +2,13 @@ const express = require('express');
 const { TourModel } = require('../models/tourModel');
 
 
+exports.alaisTopTours = async(req,res,next) => {
+    req.query.limit = '5';
+    req.query.sort = '-ratingsAverage,price';
+    req.query.fields = 'name,price,ratingAverage,summary,difficulty';
+    nect();
+}
+
 exports.createTour = async (req, res) => {
     try {
         const { name, rating, price } = req.body;
