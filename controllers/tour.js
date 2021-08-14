@@ -10,7 +10,16 @@ exports.alaisTopTours = async(req,res,next) => {
 }
 
 class APIFeatures{
-    constructor(query, queryString)
+    constructor(query, queryString){
+        this.query = query;
+        this.queryString = queryString;
+    }
+
+    filter(){
+        const queryObj = {...this.queryString}
+        const excludedFields = ['page','sort','limit','fields']
+        excludedFields.forEach((el)=> delete queryObj(el));
+    }
 }
 
 exports.createTour = async (req, res) => {
