@@ -93,6 +93,7 @@ exports.getTourStats = async(req, res) => {
                 }
             }
         ]);
+       return res.status(200).json({message: 'Success', data: stats})
     } catch (error) {
         return res.status(404).json({ message: error.message })
     }
