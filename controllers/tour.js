@@ -76,3 +76,11 @@ exports.deleteTours = async (req, res) => {
         return res.status(404).json({ message: error.message })
     }
 }
+
+exports.getTourStats = async(req, res) => {
+    try {
+        const stats =   TourModel.aggregate();
+    } catch (error) {
+        return res.status(404).json({ message: error.message })
+    }
+}
