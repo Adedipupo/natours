@@ -15,43 +15,31 @@ class APIFeatures{
         this.query = query;
         this.queryString = queryString;
     }
-
+    
     filter(){
         const queryObj = {...this.queryString}
         const excludedFields = ['page','sort','limit','fields']
         excludedFields.forEach((el)=> delete queryObj[el]);
-
-
-      let queryStr = JSON.stringify(queryObj);
-      queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-
-      this.query.find(JSON.parse(queryStr))
+        
+        
+        let queryStr = JSON.stringify(queryObj);
+        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+        
+        this.query.find(JSON.parse(queryStr))
     }
-}
 
-exports.createTour = async (req, res) => {
-    try {
-        const { name, rating, price } = req.body;
-
-        const tour = await TourModel.create(req.body);
-        if (tour) {
-            return res.status(201).json({ message: 'Success', data: tour })
+    sort(){
+        if(this.queryString.sort){
+            const sortBy = this.query.sort.split(',').join(' ')
+            this.query = this.query.sort(sortBy);
+        }else {
+            query = query.sort('-createdAt');
         }
-    } catch (error) {
-        return res.status(400).json({ message: error.message })
     }
-
 }
 
 exports.getAllTours = async (req, res) => {
     try {
-        if(req.query.sort){
-            const sortBy = req.query.sort.split(',').join(' ')
-            query = query.sort(sortBy);
-        }else {
-            query = query.sort('-createdAt');
-        }
-
         if(req.query.limit){
             const fields = req.query.fields.split(',').join(' ')
             query = query.select(fields);
@@ -78,6 +66,20 @@ exports.getAllTours = async (req, res) => {
     } catch (error) {
         return res.status(404).json({ message: error.message })
     }
+}
+
+exports.createTour = async (req, res) => {
+    try {
+        const { name, rating, price } = req.body;
+
+        const tour = await TourModel.create(req.body);
+        if (tour) {
+            return res.status(201).json({ message: 'Success', data: tour })
+        }
+    } catch (error) {
+        return res.status(400).json({ message: error.message })
+    }
+
 }
 
 exports.getOneTour = async (req, res) => {
