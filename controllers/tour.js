@@ -79,7 +79,20 @@ exports.deleteTours = async (req, res) => {
 
 exports.getTourStats = async(req, res) => {
     try {
-        const stats =   TourModel.aggregate();
+        const stats =   TourModel.aggregate([
+            {
+                $match: { ratingsAverage: {$gte: 4.5}}
+            },
+            {
+                $group: {
+                    _id: null,
+                    avgRating: { $avg : '$averageRating'},
+                    avgPrice: { $avg : '$price'},
+                    minPrice: { $avg : '$price'},
+                    maxPrice: { $avg : '$price'}
+                }
+            }
+        ]);
     } catch (error) {
         return res.status(404).json({ message: error.message })
     }
