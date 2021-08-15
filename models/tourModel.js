@@ -85,6 +85,7 @@ tourSchema.post(/^find/,function(docs,next){
 })
 
 tourSchema.pre('aggregate',function(next){
+    this.pipeline().unshift({$match: {secretTour : {$ne:true}}})
     next();
 })
 
