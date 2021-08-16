@@ -45,41 +45,34 @@ exports.updateTour = catchAsync(async (req, res) => {
     return res.status(203).json({ message: 'Success', data: tour })
 })
 
-exports.deleteTours = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const tour = await TourModel.findByIdAndRemove(id);
+exports.deleteTours = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const tour = await TourModel.findByIdAndRemove(id);
 
-        if (tour) {
-            return res.status(204).json({ message: 'Deleted Successfully !!!' })
-        }
-    } catch (error) {
-        return res.status(404).json({ message: error.message })
+    if (tour) {
+        return res.status(204).json({ message: 'Deleted Successfully !!!' })
     }
-}
+})
 
-exports.getTourStats = async(req, res) => {
-    try {
-        const stats = await TourModel.aggregate([
-            {
-                $match: { ratingAverage: {$gte: 4.5}}
-            },
-            {
-                $group: {
-                    _id:{$toUpper : '$difficulty'},
-                    numTours: {$sum : 1},
-                    numRatings: {$sum: '$ratingQuatity'},
-                    avgRating: { $avg : '$ratingAverage'},
-                    avgPrice: { $avg : '$price'},
-                    minPrice: { $min : '$price'},
-                    maxPrice: { $max : '$price'}
-                }
-            },{
-                $sort: { avgPrice : 1}
+exports.getTourStats = catchAsync(async(req, res) => {
+    const stats = await TourModel.aggregate([
+        {
+            $match: { ratingAverage: {$gte: 4.5}}
+        },
+        {
+            $group: {
+                _id:{$toUpper : '$difficulty'},
+                numTours: {$sum : 1},
+                numRatings: {$sum: '$ratingQuatity'},
+                avgRating: { $avg : '$ratingAverage'},
+                avgPrice: { $avg : '$price'},
+                minPrice: { $min : '$price'},
+                maxPrice: { $max : '$price'}
             }
-        ]);
-       return res.status(200).json({message: 'Success', data: stats})
-    } catch (error) {
-        return res.status(404).json({ message: error.message })
-    }
-}
+        },{
+            $sort: { avgPrice : 1}
+        }
+    ]);
+   return res.status(200).json({message: 'Success', data: stats})
+
+})
