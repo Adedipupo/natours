@@ -11,16 +11,18 @@ exports.alaisTopTours = async(req,res,next) => {
     next();
 }
 
+const catchAsync = fn => {
+    return (req, res, next) => {
+      fn(req, res, next).catch(next);
+    };
+  };
 
-exports.getAllTours = async (req, res) => {
-    try {
-        const features = new APIFeatures(TourModel.find(),req.query).filter().sort().limit().paginate();
-        const tours = await features.query;
-        return res.status(200).json({ msg: 'Success', results: tours.length, data: tours })
-    } catch (error) {
-        return res.status(404).json({ message: error.message })
-    }
-}
+
+exports.getAllTours = catchAsync(async (req, res) => {
+    const features = new APIFeatures(TourModel.find(),req.query).filter().sort().limit().paginate();
+    const tours = await features.query;
+    return res.status(200).json({ msg: 'Success', results: tours.length, data: tours })
+})
  
 exports.createTour = async (req, res) => {
     try {

@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 const indexRouter = require('./routes/index');
 const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controllers/error');
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ app.all('*', (req, res, next) => {
   next(new AppError(`Can't find the ${req.originalUrl} on the server`,404))
 })
 
-app.use()
+app.use(globalErrorHandler )
 
 
 module.exports = app;
