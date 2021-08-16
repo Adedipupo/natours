@@ -2,6 +2,7 @@ const { query } = require('express');
 const express = require('express');
 const { TourModel } = require('../models/tourModel');
 const APIFeatures = require('../utils/apiFeatures');
+const catchAsync = require('../utils/catchAsync');
 
 
 exports.alaisTopTours = async(req,res,next) => {
@@ -10,13 +11,6 @@ exports.alaisTopTours = async(req,res,next) => {
     req.query.fields = 'name,price,ratingAverage,summary,difficulty';
     next();
 }
-
-const catchAsync = fn => {
-    return (req, res, next) => {
-      fn(req, res, next).catch(next);
-    };
-  };
-
 
 exports.getAllTours = catchAsync(async (req, res) => {
     const features = new APIFeatures(TourModel.find(),req.query).filter().sort().limit().paginate();
