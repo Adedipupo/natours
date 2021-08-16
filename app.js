@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 const indexRouter = require('./routes/index');
+const AppError = require('./utils/appError');
 
 dotenv.config();
 
@@ -17,10 +18,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api/v1', indexRouter);
 
 app.all('*', (req, res, next) => {
-  const err = new Error(`Can't find the ${req.originalUrl} on the server`)
-  err.status = 'fail';
-  err.statusCode = 404;
-  next(err)
+  next(new AppError(`Can't find the ${req.originalUrl} on the server`,404))
 })
 
 app.use((err, req, res, next) => {
