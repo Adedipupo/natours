@@ -2,6 +2,7 @@ const { query } = require('express');
 const express = require('express');
 const { TourModel } = require('../models/tourModel');
 const APIFeatures = require('../utils/apiFeatures');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
 
@@ -27,13 +28,15 @@ exports.createTour = catchAsync(async (req, res) => {
         }
 })
 
-exports.getOneTour = catchAsync(async (req, res) => {
+exports.getOneTour = catchAsync(async (req, res,next) => {
     const { id } = req.params;
     const tour = await TourModel.findById(id);
 
 
     if (tour) {
         return res.status(200).json({ message: 'Success', data: tour })
+    }else{
+         next(new AppError('No tour with the Id found'))
     }
 })
 
