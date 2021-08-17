@@ -19,11 +19,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'default.jpg'
   },
-  role: {
-    type: String,
-    enum: ['user', 'guide', 'lead-guide', 'admin'],
-    default: 'user'
-  },
+//   role: {
+//     type: String,
+//     enum: ['user', 'guide', 'lead-guide', 'admin'],
+//     default: 'user'
+//   },
   password: {
     type: String,
     required: [true, 'Please provied a password'],
@@ -41,14 +41,14 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords are not the same!'
     }
   },
-  passwordChangedAt: Date,
-  passwordResetToken: String,
-  passwordResetExpires: Date,
-  active: {
-    type: Boolean,
-    default: true,
-    select: false
-  }
+//   passwordChangedAt: Date,
+//   passwordResetToken: String,
+//   passwordResetExpires: Date,
+//   active: {
+//     type: Boolean,
+//     default: true,
+//     select: false
+//   }
 });
 
 // userSchema.pre('save', async function(next) {
