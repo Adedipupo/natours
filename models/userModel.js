@@ -19,11 +19,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'default.jpg'
     },
-      role: {
+    role: {
         type: String,
         enum: ['user', 'guide', 'lead-guide', 'admin'],
         default: 'user'
-      },
+    },
     password: {
         type: String,
         required: [true, 'Please provied a password'],
@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema({
             message: 'Passwords are not the same!'
         }
     },
-      passwordChangedAt: Date,
+    passwordChangedAt: Date,
     //   passwordResetToken: String,
     //   passwordResetExpires: Date,
     //   active: {
@@ -51,16 +51,16 @@ const userSchema = new mongoose.Schema({
     //   }
 });
 
-userSchema.pre('save', async function(next) {
-  // Only run this function if password was actually modified
-  if (!this.isModified('password')) return next();
+userSchema.pre('save', async function (next) {
+    // Only run this function if password was actually modified
+    if (!this.isModified('password')) return next();
 
-  // Hash the password with cost of 123
-  this.password = await bcrypt.hash(this.password, 12);
+    // Hash the password with cost of 123
+    this.password = await bcrypt.hash(this.password, 12);
 
-  // Delete passwordConfirm field
-  this.passwordConfirm = undefined;
-  next();
+    // Delete passwordConfirm field
+    this.passwordConfirm = undefined;
+    next();
 });
 
 // userSchema.pre('save', function(next) {
@@ -76,18 +76,18 @@ userSchema.pre('save', async function(next) {
 //   next();
 // });
 
-userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
-  return await bcrypt.compare(candidatePassword, userPassword);
+userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
+    return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
-  if (this.passwordChangedAt) {
-    const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+    if (this.passwordChangedAt) {
+        const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
 
-    return JWTTimestamp < changedTimestamp;
-  }
-  // False means NOT changed
-  return false;
+        return JWTTimestamp < changedTimestamp;
+    }
+    // False means NOT changed
+    return false;
 };
 
 // userSchema.methods.createPasswordResetToken = function() {
