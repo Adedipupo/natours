@@ -8,7 +8,7 @@ router.get('/', getAllUsers)
 router.post('/register', register);
 router.post('/login', login);
 router.post('/forgotpassword', forgotPassword);
-router.post('/resetpassword', resetPassword);
+router.patch('/resetpassword/:token', resetPassword);
 
 
 module.exports =router;
