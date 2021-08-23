@@ -83,9 +83,14 @@ exports.protect = catchAsync(async (req, res, next) => {
       if (!roles.includes(req.user.role)) {
         return next(new AppError('You do not have permission to perform this action', 403));
       }
-  
       next();
     };
   };
 
-  
+  exports.forgotPassword = catchAsync(async (req, res,next) => {
+      const user = await UserModel.findOne({email});
+      if(!user){
+          return next(new AppError('There is no user with that email address.',404));
+      }
+  })
+  exports.resetPassword = catchAsync(async (req, res,next) => {})
